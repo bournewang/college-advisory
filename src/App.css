@@ -1,0 +1,121 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 10vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.home-page {
+  padding: 20px;
+}
+
+.home-page input {
+  margin: 10px;
+  padding: 10px;
+  font-size: 1em;
+}
+
+.home-page button {
+  padding: 10px 20px;
+  font-size: 1em;
+}
+
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  width: 100%;
+}
+
+.messages {
+  flex: 1;
+  /* width: 80%; */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 2px;
+  margin-bottom: 10px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-container {
+  display: flex;
+  align-items: flex-start;
+  margin: 5px 0;
+}
+.message-container.user {
+  align-self: flex-end;
+}
+.message {
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 60%;
+  word-wrap: break-word;
+}
+
+.message.user {
+  background-color: #e1ffc7;
+  align-self: flex-end;
+  text-align: right;
+}
+
+.message.bot {
+  background-color: #f1f0f0;
+  align-self: flex-start;
+  text-align: left;
+}
+
+.user-icon,
+.bot-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e1ffc7;
+    margin-left: 10px;
+    font-size: 24px;
+  }
+  
+
+.user-icon {
+  background-color: #e1ffc7;
+  /* align-self: flex-end; */
+  /* margin-left: 10px; */
+}
+
+.bot-icon {
+  background-color: #f1f0f0;
+  /* align-self: flex-start; */
+  /* margin-right: 10px; */
+}
+
+.input-area {
+  display: flex;
+  width: 80%;
+  margin-top: 20px;
+  background-color: white;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 10px;
+  font-size: 1em;
+}
+
+.input-area button {
+  padding: 10px 20px;
+  font-size: 1em;
+}
