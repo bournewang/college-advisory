@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 import { sendMessage } from '../api';
 
-const ChatBox = () => {
+const ChatBox = (props) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const location = useLocation();
-  const { initialQuestion, sessionId } = location.state || {};
 
   useEffect(() => {
-    if (initialQuestion && sessionId) {
-      sendMessageToAPI(initialQuestion);
-    }
-  }, [initialQuestion, sessionId]);
+  }, []);
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
@@ -20,9 +17,7 @@ const ChatBox = () => {
 
   const sendMessageToAPI = async (message) => {
     try {
-      const newMessages = await sendMessage(sessionId, message);
-      console.log("messages: -----")
-      console.log(newMessages)
+      const newMessages = await sendMessage(message);
       setMessages(newMessages);
     } catch (error) {
       console.error('Error sending message:', error);
@@ -53,7 +48,14 @@ const ChatBox = () => {
             ) : (
               <>
                 <div className="bot-icon">👨‍🏫</div>
-                <div className="message bot">{message.text}</div>
+                <div className="message bot">
+                  <ReactMarkdown 
+                    children={message.text} 
+                    remarkPlugins={[remarkGfm]} 
+                    rehypePlugins={[rehypeRaw]} 
+                  />
+                  {/* {message.text} */}
+                  </div>
               </>
             )}
           </div>

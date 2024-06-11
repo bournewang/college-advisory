@@ -23,6 +23,8 @@
   .home-header h1 {
     font-size: 3em;
     margin: 0;
+    color: darkcyan;
+    background-color: white;
   }
   
   .home-header p {
@@ -97,3 +99,18 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
+
+  .ask-button {
+    font-size: 24px;
+    padding: 20px 40px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .ask-button:hover {
+    background-color: #0056b3;
+  }
