@@ -32,17 +32,24 @@ def send_message():
         return jsonify({'error': 'token not exists!'})
 
     # 调用OpenAI API生成响应
+    sessions[token].append({'role': 'user', 'content': message})
     response = client.chat.completions.create(
         model="gpt-4o",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": message}
-        ]
+        messages=sessions[token]
     )
 
     response_text = response.choices[0].message.content
-    sessions[token].append({'sender': 'user', 'text': message})
-    sessions[token].append({'sender': 'bot', 'text': response_text})
+    sessions[token].append({'role': 'assistant', 'content': response_text})
+    return jsonify({'messages': sessions[token]})
+
+@app.route('/api/fetch_messages', methods=['GET'])
+def fetch_messages():
+    token = request.headers.get('Token')
+    print(f"token: {token:s}")
+    print(sessions)
+    if not token or token not in sessions:
+        return jsonify({'error': 'Invalid session ID'}), 400
+
     return jsonify({'messages': sessions[token]})
 
 if __name__ == '__main__':
