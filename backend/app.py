@@ -1,14 +1,26 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS, cross_origin
+from dotenv import load_dotenv
 import uuid
 import os
 from openai import OpenAI
 
-app = Flask(__name__)
+# 获取当前文件的绝对路径
+current_file_path = os.path.abspath(__file__)
+
+# 获取父目录，即项目根目录
+project_root = os.path.dirname(os.path.dirname(current_file_path))
+
+# 构建静态文件目录的绝对路径
+static_folder = os.path.join(project_root, 'build')
+
+app = Flask(__name__, static_folder=static_folder)
+
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Session-Id'
 
 # 设置OpenAI API密钥
+load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 print(f'open api key: {os.getenv("OPENAI_API_KEY"):s}')
 

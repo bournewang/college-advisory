@@ -1,13 +1,15 @@
 import axios from 'axios';
+import config from "../config";
 
-const API_URL = 'http://127.0.0.1:5000/api';
+// const config.apiUrl = 'http://127.0.0.1:5000/api';
+// const config.apiUrl = "https://college-advisory.dt.r.appspot.com/api";
 
 export const startSession = async () => {
   try {
     const token = sessionStorage.getItem('token');
     if (token) 
       return
-    const response = await axios.post(`${API_URL}/start_session`);
+    const response = await axios.post(`${config.apiUrl}/start_session`);
     if (response.data && response.data.token) {
       sessionStorage.setItem('token', response.data.token);
     }
@@ -20,7 +22,7 @@ export const startSession = async () => {
 export const sendMessage = async (message) => {
   try {
     const token = sessionStorage.getItem('token');
-    const response = await axios.post(`${API_URL}/send_message`, { message }, {
+    const response = await axios.post(`${config.apiUrl}/send_message`, { message }, {
       headers: {
         'Token': token,
       }
@@ -34,7 +36,7 @@ export const sendMessage = async (message) => {
 export const fetchMessages = async () => {
   try {
     const token = sessionStorage.getItem('token');
-    const response = await axios.get(`${API_URL}/fetch_messages`, {
+    const response = await axios.get(`${config.apiUrl}/fetch_messages`, {
       headers: {
         'Token': token,
       },
