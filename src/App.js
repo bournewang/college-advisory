@@ -1,23 +1,20 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
+import HotTopicPage from './pages/HotTopicPage';
 import ChatPage from './pages/ChatPage';
 import './App.css';
 
-function App() {
+const App = () => {
   return (
     <Router>
-      <div className="App">
-        <header className="App-header">
-          <h1>College Advisory</h1>
-        </header>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/chat" element={<ChatPage />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/hot-topic/:topic" element={<HotTopicPage />} />
+        <Route path="/chat" element={<ChatPage />} />
+      </Routes>
     </Router>
   );
-}
+};
 
 export default App;

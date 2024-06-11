@@ -24,23 +24,27 @@ def start_session():
 @cross_origin()
 def send_message():
     data = request.json
-    session_id = data.get('session_id')
+    # session_id = data.get('session_id')
+    session_id = request.headers.get('Session-Id')
     message = data.get('message')
 
-    if session_id not in sessions:
-        return jsonify({'error': 'Invalid session ID'}), 400
+    # if session_id not in sessions:
+    #     return jsonify({'error': 'Invalid session ID'}), 400
 
     # 调用OpenAI API生成响应
-    chat_completion = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": message}
-        ]
-    )
+    # chat_completion = client.chat.completions.create(
+    #     model="gpt-4o",
+    #     messages=[
+    #         {"role": "system", "content": "You are a helpful assistant."},
+    #         {"role": "user", "content": message}
+    #     ]
+    # )
 
-    response_text = chat_completion.choices[0].message.content
-    # return jsonify({'messages': response_text})
+    response_text = "test" #chat_completion.choices[0].message.content
+    res = []
+    res.append({'sender': 'user', 'text': message})
+    res.append({'sender': 'bot', 'text': response_text})
+    return jsonify({'messages': res})
     # chat_completion.choices[0].message['content'].strip()
 
     sessions[session_id].append({'sender': 'user', 'text': message})

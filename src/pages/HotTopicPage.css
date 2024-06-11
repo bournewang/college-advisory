@@ -1,0 +1,28 @@
+.hot-topic-page {
+  font-family: 'Arial, sans-serif';
+  padding: 20px;
+}
+
+.hot-topic-page h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.hot-topic-page div {
+  line-height: 1.6;
+}
+
+.hot-topic-page table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.hot-topic-page table, th, td {
+  border: 1px solid black;
+}
+
+.hot-topic-page th, td {
+  padding: 10px;
+  text-align: left;
+}

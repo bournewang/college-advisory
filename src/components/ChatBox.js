@@ -21,6 +21,8 @@ const ChatBox = () => {
   const sendMessageToAPI = async (message) => {
     try {
       const newMessages = await sendMessage(sessionId, message);
+      console.log("messages: -----")
+      console.log(newMessages)
       setMessages(newMessages);
     } catch (error) {
       console.error('Error sending message:', error);
@@ -33,7 +35,11 @@ const ChatBox = () => {
       setInput('');
     }
   };
-
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+        handleSend();
+    }
+  };
   return (
     <div className="chat-box">
       <div className="messages">
@@ -58,6 +64,7 @@ const ChatBox = () => {
           type="text"
           value={input}
           onChange={handleInputChange}
+          onKeyPress={handleKeyPress}
           placeholder="Type your message"
         />
         <button onClick={handleSend}>Send</button>
