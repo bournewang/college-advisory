@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import uuid
 import os
 from openai import OpenAI
+import redis
+import json
 
 def create_app():
     # 加载 .env 文件中的环境变量
@@ -25,17 +27,17 @@ def create_app():
 
     # 设置OpenAI API密钥
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    # print(f'open api key: {os.getenv("OPENAI_API_KEY"):s}')
 
-    sessions = {}
+    # 设置 Redis 连接
+    redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 
     @app.route('/api/start_session', methods=['POST'])
     @cross_origin()
     def start_session():
         token = request.headers.get('Token')
-        if not token or token not in sessions:
+        if not token or not redis_client.exists(token):
             token = str(uuid.uuid4())
-            sessions[token] = []
+            redis_client.set(token, json.dumps([]))
         return jsonify({'token': token})
 
     @app.route('/api/send_message', methods=['POST'])
@@ -45,27 +47,35 @@ def create_app():
         token = request.headers.get('Token')
         message = data.get('message')
 
-        if token not in sessions:
+        if not redis_client.exists(token):
             return jsonify({'error': 'token not exists!'})
 
+        # 从 Redis 获取会话数据
+        session_data = json.loads(redis_client.get(token))
+        session_data.append({'role': 'user', 'content': message})
+
         # 调用OpenAI API生成响应
-        sessions[token].append({'role': 'user', 'content': message})
         response = client.chat.completions.create(
             model="gpt-4",
-            messages=sessions[token]
+            messages=session_data
         )
 
         response_text = response.choices[0].message.content
-        sessions[token].append({'role': 'assistant', 'content': response_text})
-        return jsonify({'messages': sessions[token]})
+        session_data.append({'role': 'assistant', 'content': response_text})
+
+        # 将更新的会话数据存储到 Redis
+        redis_client.set(token, json.dumps(session_data))
+
+        return jsonify({'messages': session_data})
 
     @app.route('/api/fetch_messages', methods=['GET'])
     def fetch_messages():
         token = request.headers.get('Token')
-        if not token or token not in sessions:
+        if not token or not redis_client.exists(token):
             return jsonify({'error': 'Invalid session ID'}), 400
 
-        return jsonify({'messages': sessions[token]})
+        session_data = json.loads(redis_client.get(token))
+        return jsonify({'messages': session_data})
 
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
