@@ -24,11 +24,11 @@ const HomePage = () => {
     <div className="home-page">
       <header className="home-header">
         <h1>{config.siteName}</h1> {/* Use the site name from config */}
-        {/* <p>{config.slogon}</p> */}
+        <p>{config.slogon}</p>
       </header>
       <div className="question-section">
         <button className="ask-button" onClick={handleButtonClick}>
-          咨询最强AI - (GPT-4o) 
+          咨询 GPT-4o
         </button>
       </div>
       <div className="hot-links">

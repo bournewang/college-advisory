@@ -25,7 +25,7 @@ def create_app():
 
     # 设置OpenAI API密钥
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    print(f'open api key: {os.getenv("OPENAI_API_KEY"):s}')
+    # print(f'open api key: {os.getenv("OPENAI_API_KEY"):s}')
 
     sessions = {}
 
