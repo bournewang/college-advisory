@@ -6,6 +6,8 @@ import os
 from openai import OpenAI
 
 def create_app():
+    # 加载 .env 文件中的环境变量
+    load_dotenv()
 
     # 获取当前文件的绝对路径
     current_file_path = os.path.abspath(__file__)
@@ -22,7 +24,6 @@ def create_app():
     app.config['CORS_HEADERS'] = 'Session-Id'
 
     # 设置OpenAI API密钥
-    load_dotenv()
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     print(f'open api key: {os.getenv("OPENAI_API_KEY"):s}')
 
@@ -41,14 +42,14 @@ def create_app():
         data = request.json
         token = request.headers.get('Token')
         message = data.get('message')
-        
+
         if token not in sessions:
             return jsonify({'error': 'token not exists!'})
 
         # 调用OpenAI API生成响应
         sessions[token].append({'role': 'user', 'content': message})
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4",
             messages=sessions[token]
         )
 
@@ -59,15 +60,21 @@ def create_app():
     @app.route('/api/fetch_messages', methods=['GET'])
     def fetch_messages():
         token = request.headers.get('Token')
-        print(f"token: {token:s}")
-        print(sessions)
         if not token or token not in sessions:
             return jsonify({'error': 'Invalid session ID'}), 400
 
         return jsonify({'messages': sessions[token]})
 
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve(path):
+        if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+            return send_from_directory(app.static_folder, path)
+        else:
+            return send_from_directory(app.static_folder, 'index.html')
+
     return app
-    
+
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=True)
