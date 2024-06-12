@@ -32,8 +32,10 @@ def create_app():
     @app.route('/api/start_session', methods=['POST'])
     @cross_origin()
     def start_session():
-        token = str(uuid.uuid4())
-        sessions[token] = []
+        token = request.headers.get('Token')
+        if not token or token not in sessions:
+            token = str(uuid.uuid4())
+            sessions[token] = []
         return jsonify({'token': token})
 
     @app.route('/api/send_message', methods=['POST'])

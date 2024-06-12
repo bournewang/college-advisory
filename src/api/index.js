@@ -7,10 +7,12 @@ import config from "../config";
 export const startSession = async () => {
   try {
     const token = sessionStorage.getItem('token');
-    if (token) 
-      return
-    const response = await axios.post(`${config.apiUrl}/start_session`);
-    if (response.data && response.data.token) {
+    const response = await axios.post(`${config.apiUrl}/start_session`, {}, {
+      headers: {
+        'Token': token,
+      }
+    });
+    if (response.data && response.data.token && response.data.token !== token) {
       sessionStorage.setItem('token', response.data.token);
     }
     return response.data;
